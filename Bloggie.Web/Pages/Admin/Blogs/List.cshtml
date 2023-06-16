@@ -1,0 +1,78 @@
+﻿@page
+@model Bloggie.Web.Pages.Admin.Blogs.ListModel
+<script>
+    $(document).ready(function () {
+        // Replace 'bi-x' with the desired icon class
+        $('#removeIcon').addClass('bi-x');
+    });
+</script>
+
+<div class="bg-secondary bg-opacity-10 py-2 mb-5">
+    <div class="container">
+        <h1>Blog Post</h1>
+    </div>
+</div>
+
+<div class="container">
+    <form method="get" class="mb-3">
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Search by heading..." name="SearchTerm" value="@Model.SearchTerm" id="searchInput" />
+            <button class="btn btn-danger cancel-button" type="button" id="cancelButton" style="display: none;">
+                <i class="bi" id="removeIcon"></i> Remove
+            </button>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+        <script>
+            var searchInput = document.getElementById('searchInput');
+            var cancelButton = document.getElementById('cancelButton');
+
+            searchInput.addEventListener('input', function () {
+                if (searchInput.value.length > 0) {
+                    cancelButton.style.display = 'block';
+                } else {
+                    cancelButton.style.display = 'none';
+                }
+            });
+
+            cancelButton.addEventListener('click', function () {
+                searchInput.value = 'Search by heading...';
+                cancelButton.style.display = 'X';
+            });
+        </script>
+
+
+    </form>
+
+    @if (Model.BlogPosts != null && Model.BlogPosts.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Heading</th>
+                    <td style="color:red;text-shadow:inherit">Edit</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var blogPost in Model.BlogPosts)
+                {
+                    <tr>
+                        <td>@blogPost.Id</td>
+                        <td>@blogPost.Heading</td>
+                        <td>
+                            <a href="/Admin/Blogs/Edit/@blogPost.Id" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="container" style="font-style: italic; color: red; font-size: 2em;">
+            <p>No blog posts were found</p>
+        </div>
+    }
+</div>
